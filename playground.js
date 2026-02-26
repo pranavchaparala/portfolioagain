@@ -65,7 +65,7 @@ function initGrid() {
         const title = data.title;
         const description = data.description;
         const filename = data.filename;
-        const assetPath = `../playgroundassets/${filename}`;
+        const assetPath = `playgroundassets/${filename}`;
 
         if (filename.toLowerCase().endsWith('.mp4')) {
             const vid = document.createElement('video');
