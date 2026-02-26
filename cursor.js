@@ -73,8 +73,4 @@ function initCursor() {
     updateCursor();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Skip cursor on touch-only devices
-    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
-    initCursor();
-});
+document.addEventListener('DOMContentLoaded', initCursor);
