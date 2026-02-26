@@ -27,7 +27,7 @@ const dragThreshold = 5;
 function initGrid() {
     grid = document.getElementById('grid');
     gridWrapper = document.getElementById('grid-wrapper');
-    infoOverlay = document.getElementById('info-overlay'); // Matches HTML ID
+    infoOverlay = document.getElementById('info-overlay'); 
     viewport = document.getElementById('viewport');
 
     if (!grid || !gridWrapper || !viewport) return;
@@ -65,6 +65,8 @@ function initGrid() {
         const title = data.title;
         const description = data.description;
         const filename = data.filename;
+        
+        // Correct path for root-level assets
         const assetPath = `playgroundassets/${filename}`;
 
         if (filename.toLowerCase().endsWith('.mp4')) {
@@ -140,7 +142,6 @@ function updatePhysics() {
             targetX += velocityX; targetY += velocityY;
         }
 
-        // Bound detection
         const gridRect = grid.getBoundingClientRect();
         const limitX = Math.max(0, (gridRect.width - window.innerWidth) / 2);
         const limitY = Math.max(0, (gridRect.height - window.innerHeight) / 2);
@@ -151,7 +152,6 @@ function updatePhysics() {
         currentX += (targetX - currentX) * lerpAmount;
         currentY += (targetY - currentY) * lerpAmount;
 
-        // Apply translation with hardware acceleration
         gridWrapper.style.transform = `translate3d(${currentX}px, ${currentY}px, 0px) scale(1)`;
     }
     requestAnimationFrame(updatePhysics);
@@ -187,7 +187,6 @@ function handleCardClick(clickedCard, title, description, videoFilename) {
 function executeZoom({ clickedCard, title, description, videoFilename }) {
     isFocused = true;
     
-    // UI State Management
     document.body.classList.add('project-focused');
     viewport.classList.add('is-focused-mode');
     gridWrapper.classList.add('is-focused');
@@ -204,20 +203,18 @@ function executeZoom({ clickedCard, title, description, videoFilename }) {
     const zoomTargetX = (window.innerWidth / 2) - (wrapperRect.left - currentX) - (relX * scale);
     const zoomTargetY = (window.innerHeight / 2) - (wrapperRect.top - currentY) - (relY * scale);
 
-    // Perform the Zoom
     gridWrapper.style.transform = `translate3d(${zoomTargetX}px, ${zoomTargetY}px, 0px) scale(${scale})`;
 
-    // Activate Info Overlay
     if (infoOverlay) {
         infoOverlay.classList.add('active'); 
         document.getElementById('focus-title').innerText = title;
         document.getElementById('focus-subtitle').innerText = description;
     }
 
-    // Handle High-Res Overlay Video if exists
     if (videoFilename) {
         const vid = document.createElement('video');
-        vid.src = `../playgroundassets/${videoFilename}`;
+        // FIXED: Removed ../ for proper GitHub Pages pathing
+        vid.src = `playgroundassets/${videoFilename}`; 
         vid.autoplay = true; vid.muted = false; vid.loop = true; vid.playsInline = true;
         vid.className = 'card-video';
         vid.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s ease 0.5s;pointer-events:none;";
@@ -232,7 +229,6 @@ function resetView() {
     isFocused = false;
     isResetting = true;
 
-    // Reset UI State
     document.body.classList.remove('project-focused');
     viewport.classList.remove('is-focused-mode');
     gridWrapper.classList.remove('is-focused');
@@ -240,14 +236,12 @@ function resetView() {
 
     if (infoOverlay) infoOverlay.classList.remove('active');
 
-    // Return grid to center origin
     targetX = 0; targetY = 0;
     currentX = 0; currentY = 0;
     velocityX = 0; velocityY = 0;
 
     gridWrapper.style.transform = `translate3d(0px, 0px, 0px) scale(1)`;
 
-    // Clean up active cards
     const activeCards = document.querySelectorAll('.card.active-card');
     activeCards.forEach(card => {
         const vids = card.querySelectorAll('.card-video');
@@ -264,7 +258,6 @@ function resetView() {
     }, 1200);
 }
 
-// Global click-to-reset handler (Clicks outside the zoomed card)
 window.addEventListener('mousedown', (e) => {
     if (!isFocused || isResetting) return;
     if (!e.target.closest('.active-card') && !e.target.closest('#info-overlay')) {
@@ -272,7 +265,6 @@ window.addEventListener('mousedown', (e) => {
     }
 });
 
-// Initialize on Load
 window.addEventListener('load', () => { 
     if (document.getElementById('grid')) initGrid(); 
 });
