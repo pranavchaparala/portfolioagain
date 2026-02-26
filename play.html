@@ -22,20 +22,6 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 10000;
-        }
-
-        /* Override nav position for playground */
-        .main-nav {
-            top: 45px !important;
-            left: 50% !important;
-            transform: translateX(-50%) translateZ(0) !important;
-            z-index: 10002 !important;
-            mix-blend-mode: difference !important;
-        }
-
-        .main-nav a {
-            color: #ffffff !important;
         }
 
         body.project-focused .main-nav {
@@ -57,7 +43,6 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.5s ease;
-            mix-blend-mode: difference;
         }
 
         #info-overlay.active {
@@ -68,14 +53,14 @@
             font-size: 18px;
             font-weight: 500;
             text-transform: uppercase;
-            color: #ffffff;
+            color: #000;
             letter-spacing: 0.15em;
             margin-bottom: 6px;
         }
 
         #focus-subtitle {
             font-size: 14px;
-            color: #ffffff;
+            color: #000;
             opacity: 0.8;
             text-transform: uppercase;
             letter-spacing: 0.15em;
@@ -84,39 +69,17 @@
 
         .return-hint {
             font-size: 11px;
-            color: #ffffff;
+            color: #000;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             padding: 8px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 0, 0, 0.4);
             border-radius: 2px;
-        }
-
-        /* Override cursor for playground (white dot with difference blend) */
-        #cursor-square-loader {
-            display: none !important;
-        }
-
-        #cursor-svg {
-            display: none !important;
-        }
-
-        #cursor {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10003;
-            transition: transform 0.1s ease-out;
-            mix-blend-mode: difference;
         }
     </style>
 </head>
 
 <body>
-    <div id="cursor"></div>
 
     <main class="viewport" id="viewport">
         <div id="grid-wrapper" class="grid-wrapper">
@@ -134,14 +97,6 @@
     <script src="components.js"></script>
     <script src="playgroundData.js"></script>
     <script src="playground.js"></script>
-
-    <script>
-        // Playground-specific cursor (white dot, difference blend)
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-        });
-    </script>
 </body>
 
 </html>
