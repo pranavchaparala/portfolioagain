@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +10,9 @@
 
     <style>
         /* --- 1. BASE STABILIZATION --- */
-        body { 
-            background-color: #ffffff !important; 
-            isolation: isolate; 
+        body {
+            background-color: #ffffff !important;
+            isolation: isolate;
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
@@ -19,7 +20,7 @@
 
         .viewport {
             /* Force white background so 'difference' mode has a surface to invert against */
-            background-color: #ffffff !important; 
+            background-color: #ffffff !important;
             position: fixed;
             top: 0;
             left: 0;
@@ -37,7 +38,7 @@
             display: flex;
             align-items: center;
             gap: 32px;
-            z-index: 9999 !important; 
+            z-index: 9999 !important;
             mix-blend-mode: difference !important;
             pointer-events: auto;
             transition: opacity 0.6s ease;
@@ -46,73 +47,93 @@
         .main-nav a {
             text-decoration: none;
             /* White + White BG = Black Text via 'difference' */
-            color: #ffffff !important; 
+            color: #ffffff !important;
             font-size: 18px;
             font-weight: 400;
             transition: opacity 0.2s ease;
         }
 
-        .main-nav a:hover { opacity: 0.5; }
-        .active-link { text-decoration: underline !important; text-underline-offset: 4px; }
-        
+        .main-nav a:hover {
+            opacity: 0.5;
+        }
+
+        .active-link {
+            text-decoration: underline !important;
+            text-underline-offset: 4px;
+        }
+
         /* Hide nav when focused on a card */
-        body.project-focused .main-nav { opacity: 0; pointer-events: none; }
+        body.project-focused .main-nav {
+            opacity: 0;
+            pointer-events: none;
+        }
 
         /* --- 3. INFO OVERLAY --- */
         #info-overlay {
-            position: fixed !important; 
-            bottom: 6vh !important; 
+            position: fixed !important;
+            bottom: 6vh !important;
             left: 0 !important;
             width: 100% !important;
-            z-index: 9998 !important; 
+            z-index: 9998 !important;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            pointer-events: none; 
-            opacity: 0; 
+            pointer-events: none;
+            opacity: 0;
             transition: opacity 0.5s ease;
             mix-blend-mode: difference !important;
         }
-        
-        #info-overlay.active { opacity: 1 !important; }
 
-        #focus-title { 
-            font-size: 18px !important; 
-            font-weight: 500 !important; 
-            text-transform: uppercase !important; 
-            color: #ffffff !important; /* Must be white for difference */
+        #info-overlay.active {
+            opacity: 1 !important;
+        }
+
+        #focus-title {
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            color: #ffffff !important;
+            /* Must be white for difference */
             letter-spacing: 0.15em !important;
             margin-bottom: 6px !important;
         }
-        
-        #focus-subtitle { 
-            font-size: 14px !important; 
-            color: #ffffff !important; /* Must be white for difference */
+
+        #focus-subtitle {
+            font-size: 14px !important;
+            color: #ffffff !important;
+            /* Must be white for difference */
             opacity: 0.8 !important;
-            text-transform: uppercase !important; 
+            text-transform: uppercase !important;
             letter-spacing: 0.15em !important;
             margin-bottom: 20px !important;
         }
 
-        .return-hint { 
-            font-size: 11px !important; 
-            color: #ffffff !important; 
-            text-transform: uppercase !important; 
-            letter-spacing: 0.1em !important; 
-            padding: 8px 16px !important; 
-            border: 1px solid rgba(255,255,255,0.6) !important; 
-            border-radius: 2px !important; 
+        .return-hint {
+            font-size: 11px !important;
+            color: #ffffff !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.1em !important;
+            padding: 8px 16px !important;
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            border-radius: 2px !important;
         }
 
         /* --- 4. CURSOR --- */
         #cursor {
-            position: fixed; width: 10px; height: 10px; background: #ffffff; border-radius: 50%;
-            pointer-events: none; z-index: 10000; transition: transform 0.1s ease-out;
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease-out;
             mix-blend-mode: difference;
         }
     </style>
 </head>
+
 <body>
     <div id="cursor"></div>
 
@@ -128,9 +149,9 @@
         <div class="return-hint">[ CLICK ANYWHERE TO RETURN ]</div>
     </div>
 
-    <script src="/playgroundData.js"></script>
-    <script src="/playground.js"></script>
-    <script src="../components.js"></script>
+    <script src="./playgroundData.js"></script>
+    <script src="./playground.js"></script>
+    <script src="./components.js"></script>
 
     <script>
         // Custom Cursor Movement
@@ -149,4 +170,5 @@
         });
     </script>
 </body>
+
 </html>
