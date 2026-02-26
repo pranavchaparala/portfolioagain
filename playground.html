@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground | Pranav Chaparala</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/transitions.css">
+    <script src="../assets/js/transitions.js" defer></script>
+    <link rel="stylesheet" href="playground.css">
+</head>
+
+<body>
+    <div id="cursor"></div>
+
+    <header class="navbar">
+        <div class="flex items-center gap-40">
+            <a href="../index.html" class="navbar-brand">PRANAV CHAPARALA</a>
+            <div class="flex gap-10">
+                <a href="../work/work.html" class="nav-link">Work</a>
+                <a href="#" class="nav-link">Contact</a>
+                <a href="../about/about.html" class="nav-link">About</a>
+            </div>
+        </div>
+        <a href="#" class="nav-link active" id="reset-btn">Playground</a>
+    </header>
+
+    <main class="viewport" id="viewport">
+        <div id="grid-wrapper" class="grid-wrapper">
+            <div id="grid" class="grid-container">
+                <!-- Cards Injected via JS -->
+            </div>
+        </div>
+    </main>
+
+    <div id="info-overlay" class="info-overlay">
+        <h2 id="focus-title" class="navbar-brand !text-[0.65rem] !tracking-[0.5em] mb-2 font-bold"></h2>
+        <p id="focus-subtitle" class="nav-link !text-[0.55rem] !text-gray-600 !tracking-widest">P5JS / GENERATIVE</p>
+        <button onclick="resetView()"
+            class="mt-12 nav-link !text-[0.5rem] !text-gray-700 hover:!text-white transition-colors pointer-events-auto">
+            [ CLICK ANYWHERE TO RETURN ]
+        </button>
+    </div>
+
+    <script src="playgroundData.js"></script>
+    <script src="playground.js"></script>
+    <script>
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+        });
+
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform += ' scale(5)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = cursor.style.transform.replace(' scale(5)', ''));
+        });
+    </script>
+</body>
+
+</html>

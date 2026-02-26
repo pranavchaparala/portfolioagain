@@ -1,0 +1,322 @@
+/* --- 1. RESET & BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    cursor: none;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* --- 2. THE NAVBAR (LOCKED LOWER AT 60% - ALWAYS VISIBLE) --- */
+.main-nav {
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    z-index: 1000;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #000;
+    font-size: 18px;
+    font-weight: 400;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.main-nav a:hover {
+    opacity: 0.4;
+}
+
+.active-link {
+    text-decoration: underline !important;
+    text-underline-offset: 4px;
+}
+
+/* --- 3. GLOBAL DISSOLVE ANIMATION (SLOWED DOWN) --- */
+@keyframes contentDissolve {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        /* Slightly deeper slide */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-content {
+    /* Increased from 1.2s to 2.2s for a slower dissolve */
+    animation: contentDissolve 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: opacity, transform;
+}
+
+/* --- 4. GALLERY (INDEX ONLY) --- */
+#gallery-wrap {
+    position: fixed;
+    bottom: calc(50% + 20px + 8px);
+    left: 0;
+    width: 100%;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+.gallery-track {
+    display: flex;
+    width: max-content;
+    gap: 20px;
+    align-items: center;
+}
+
+.gallery-track img {
+    display: block;
+    object-fit: cover;
+    will-change: transform;
+    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.gallery-track a:nth-child(odd) img {
+    height: 260px;
+    aspect-ratio: 4 / 5;
+}
+
+.gallery-track a:nth-child(even) img {
+    height: 180px;
+    aspect-ratio: 5 / 4;
+}
+
+/* --- 5. WORK PAGE LIST --- */
+#work-list {
+    position: fixed;
+    top: 45px;
+    left: 45px;
+    z-index: 2000;
+}
+
+.section-label {
+    font-size: 18px;
+    color: #919191;
+    margin-bottom: 8px;
+}
+
+#work-list ul {
+    list-style: none;
+}
+
+#work-list li {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.6;
+    transition: opacity 0.2s ease;
+}
+
+#work-list a {
+    text-decoration: none;
+    color: #000;
+}
+
+#work-list li:hover {
+    opacity: 0.5;
+}
+
+/* --- 6. PHYSICS CURSOR --- */
+#cursor-svg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#thread-path {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+}
+
+#cursor-square-loader {
+    width: 14px;
+    height: 14px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-rect {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid black;
+    background: transparent;
+    transition: background-color 0.8s ease;
+}
+
+body.loaded .loader-rect {
+    background-color: black;
+}
+
+#open-project-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    white-space: nowrap;
+    display: none;
+}
+
+/* --- 7. PAGE TRANSITIONS --- */
+.page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+body.page-loaded .page-transition-overlay {
+    opacity: 0;
+}
+
+body.page-leaving .page-transition-overlay {
+    opacity: 1;
+}
+
+/* Base fade for contents */
+.page-content,
+#gallery-wrap {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.8s ease 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+body.page-loaded .page-content,
+body.page-loaded #gallery-wrap {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body.page-leaving .page-content,
+body.page-leaving #gallery-wrap {
+    opacity: 0;
+    transform: translateY(-15px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* --- 8. RESPONSIVE DESIGN --- */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+
+    /* Slightly smaller gallery items */
+    .gallery-track a:nth-child(odd) img {
+        height: 150px;
+    }
+
+    .gallery-track a:nth-child(even) img {
+        height: 220px;
+    }
+
+    .main-nav {
+        gap: 20px;
+    }
+
+    /* Project Pages: Adjust container max-width */
+    .case-study-container {
+        width: 70vw;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .main-nav {
+        top: auto;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        gap: 16px;
+        flex-wrap: wrap;
+        width: 90vw;
+        justify-content: center;
+    }
+
+    #gallery-wrap {
+        bottom: calc(30px + 60px + 8px);
+    }
+
+    .gallery-track a:nth-child(odd) img {
+        height: 120px;
+    }
+
+    .gallery-track a:nth-child(even) img {
+        height: 180px;
+    }
+
+    /* Hide the work list on mobile project pages or index */
+    #work-list {
+        display: none !important;
+    }
+
+    .case-study-container {
+        width: 90vw;
+        padding-top: 100px;
+    }
+
+    .meta-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Hide the scroll minimap/rail */
+    .nav-rail {
+        display: none !important;
+    }
+
+    .back-btn-center {
+        top: 20px;
+        left: 20px;
+        transform: none;
+    }
+}
+
+/* Disable Hover and Custom Cursor on Mobile Devices */
+@media (hover: none) and (pointer: coarse) {
+
+    #cursor-svg,
+    #cursor-square-loader {
+        display: none !important;
+    }
+
+    * {
+        cursor: auto !important;
+    }
+
+    #hover-image-container {
+        display: none !important;
+    }
+}

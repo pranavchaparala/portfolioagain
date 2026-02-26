@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClanX | Pranav Chaparala</title>
+    <link rel="stylesheet" href="../../style.css">
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+    <style>
+        /* --- 1. RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- 2. TOP CENTER NAVIGATION & GRADIENT --- */
+        .top-nav-fade {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom,
+                    rgba(255, 255, 255, 1) 0%,
+                    rgba(255, 255, 255, 1) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            z-index: 1500;
+            pointer-events: none;
+        }
+
+        .back-btn-center {
+            position: fixed;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: 500;
+            color: #000;
+            text-decoration: none;
+            z-index: 2100;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s ease;
+            pointer-events: auto;
+        }
+
+        .back-btn-center:hover {
+            opacity: 0.5;
+        }
+
+        /* --- 3. FIXED SIDEBAR LIST --- */
+        #work-list {
+            position: fixed;
+            top: 45px;
+            left: 45px;
+            z-index: 2000;
+            pointer-events: auto;
+        }
+
+        .section-label {
+            font-size: 18px;
+            font-weight: 400;
+            color: #919191;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        #work-list ul {
+            list-style: none;
+        }
+
+        #work-list li {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.6;
+            transition: opacity 0.2s ease;
+        }
+
+        #work-list li:hover {
+            opacity: 0.5;
+        }
+
+        #work-list a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .active-link {
+            text-decoration: underline !important;
+            text-underline-offset: 4px;
+        }
+
+        /* --- 4. GLOBAL DISSOLVE --- */
+        @keyframes contentDissolve {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-content {
+            animation: contentDissolve 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: opacity, transform;
+        }
+
+        /* --- 5. CENTERED COLUMN LAYOUT --- */
+        #main-content {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .case-study-container {
+            width: 50vw;
+            max-width: 1000px;
+            padding-top: 140px;
+            padding-bottom: 20vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- 6. PROJECT HEADER --- */
+        h1 {
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .body-text {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #000;
+            margin-bottom: 24px;
+        }
+
+        /* Updated Meta Grid to match Echoes layout */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 10px 40px;
+            margin: 40px 0 80px 0;
+        }
+
+        .meta-label {
+            font-size: 14px;
+            color: #919191;
+        }
+
+        .meta-value {
+            font-size: 14px;
+            color: #000;
+            font-weight: 500;
+        }
+
+        /* --- 7. IMAGES --- */
+        .case-study-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        /* --- 8. PHYSICS CURSOR --- */
+        #cursor-svg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        #thread-path {
+            fill: none;
+            stroke: black;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+        }
+
+        #cursor-square-loader {
+            width: 14px;
+            height: 14px;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-rect {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid black;
+            background: transparent;
+            transition: background-color 0.8s ease;
+        }
+
+        body.loaded .loader-rect {
+            background-color: black;
+        }
+
+        /* --- 9. MINI-MAP RAIL --- */
+        .nav-rail {
+            position: fixed;
+            top: 50%;
+            right: 45px;
+            transform: translateY(-50%);
+            width: 60px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 500;
+            overflow: hidden;
+        }
+
+        #mini-map-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            transform-origin: top left;
+            opacity: 0.25;
+        }
+
+        #scroll-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            border: 1px solid #000;
+            z-index: 501;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="../../work.html" class="back-btn-center"><span>←</span> Go Back</a>
+
+
+
+    
+    <nav id="work-list">
+        <span class="section-label">Work</span>
+        <ul></ul>
+    </nav>
+    <div class="page-content">
+        <main id="main-content">
+            <div class="case-study-container">
+
+                <h1>ClanX: Deep Profile</h1>
+
+                <p class="body-text">
+                    This case study explores the key features, design philosophy, and potential impact of Deep Profiles
+                    on ClanX, an AI-powered recruitment platform.
+                </p>
+
+                <p class="body-text">
+                    It highlights the importance of understanding recruiter needs, analyzing essential candidate data
+                    points, and designing efficient, user-centered workflows.
+                </p>
+
+                <div class="meta-grid">
+                    <span class="meta-label">Year</span>
+                    <span class="meta-value">2024</span>
+
+                    <span class="meta-label">Client</span>
+                    <span class="meta-value">ClanX</span>
+
+                    <span class="meta-label">Team</span>
+                    <span class="meta-value">Pranav Chaparala, Ruchit Mehta</span>
+                </div>
+
+                <img src="assets/1.png" alt="01">
+                <img src="assets/2.png" alt="02">
+                <img src="assets/3.png" alt="03">
+                <img src="assets/4.png" alt="04">
+                <img src="assets/5.png" alt="05">
+                <img src="assets/6.png" alt="06">
+            </div>
+        </main>
+    </div>
+
+    <div class="nav-rail" id="rail">
+        <div id="scroll-indicator"></div>
+        <div id="mini-map-content"></div>
+    </div>
+
+    <script src="../../cursor.js"></script>
+    <script src="../../components.js"></script>
+    <script>
+        const lenis = new Lenis({ duration: 1.2, lerp: 0.1 });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        const mainContent = document.getElementById('main-content');
+        const miniMap = document.getElementById('mini-map-content');
+        const indicator = document.getElementById('scroll-indicator');
+        const rail = document.getElementById('rail');
+
+        miniMap.appendChild(mainContent.cloneNode(true));
+
+        function syncLayout() {
+            const pageHeight = mainContent.scrollHeight;
+            const scaleFactor = rail.clientWidth / window.innerWidth;
+            miniMap.style.transform = `scale(${scaleFactor})`;
+            rail.style.height = `${Math.min(pageHeight * scaleFactor, window.innerHeight * 0.5)}px`;
+            indicator.style.height = `${rail.clientHeight * (window.innerHeight / pageHeight)}px`;
+        }
+
+        window.addEventListener('load', syncLayout);
+        window.addEventListener('resize', syncLayout);
+        syncLayout();
+
+        lenis.on('scroll', (e) => {
+            const scrollPercent = e.progress;
+            indicator.style.transform = `translateY(${scrollPercent * (rail.clientHeight - indicator.clientHeight)}px)`;
+            const scaleFactor = rail.clientWidth / window.innerWidth;
+            const scaledHeight = mainContent.scrollHeight * scaleFactor;
+            if (scaledHeight > rail.clientHeight) {
+                miniMap.style.top = `-${(scaledHeight - rail.clientHeight) * scrollPercent}px`;
+            }
+        });
+    </script>
+</body>
+
+</html>

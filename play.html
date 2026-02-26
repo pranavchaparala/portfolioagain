@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground | Pranav Chaparala</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="playground.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background-color: #ffffff; font-family: -apple-system, sans-serif; overflow: hidden; }
+
+        /* --- UI NAVIGATION (MINIMAL BLEND MODE) --- */
+        .back-btn-link {
+            position: fixed; 
+            top: 45px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            font-size: 14px; 
+            font-weight: 500; 
+            color: #ffffff; /* Set to white so 'difference' turns it black on white BG */
+            text-decoration: none;
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 2100;
+            mix-blend-mode: difference; /* Critical: Inverts color based on background */
+            transition: opacity 0.2s ease;
+        }
+
+        .back-btn-link:hover {
+            opacity: 0.5;
+        }
+
+        /* --- INFO OVERLAY CONTAINER --- */
+        #info-overlay {
+            z-index: 2000; 
+            position: fixed; 
+            bottom: 6vh; 
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            pointer-events: none; 
+            opacity: 0; 
+            transition: opacity 0.5s ease;
+            mix-blend-mode: difference; /* Optional: ensures readability over videos too */
+        }
+        
+        #info-overlay.active { opacity: 1; }
+
+        #focus-title { 
+            font-size: 16px; 
+            font-weight: 500; 
+            text-transform: uppercase; 
+            margin-bottom: 6px; 
+            color: #ffffff;
+            letter-spacing: 0.15em;
+        }
+        
+        #focus-subtitle { 
+            font-size: 11px; 
+            color: #cccccc; 
+            text-transform: uppercase; 
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+        }
+
+        .return-hint {
+            font-size: 9px; 
+            color: #ffffff; 
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.7;
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        /* --- GRID VIEWPORT --- */
+        .viewport { width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 1; }
+
+        .card video, .card img {
+            width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+        }
+
+        #cursor {
+            position: fixed; width: 10px; height: 10px; background: #ffffff; border-radius: 50%;
+            pointer-events: none; z-index: 10000; transition: transform 0.1s ease-out;
+            mix-blend-mode: difference;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor"></div>
+    
+    <a href="../work.html" class="back-btn-link">
+        <span>←</span> Go Back
+    </a>
+
+    <main class="viewport" id="viewport">
+        <div id="grid-wrapper" class="grid-wrapper">
+            <div id="grid" class="grid-container"></div>
+        </div>
+    </main>
+
+    <div id="info-overlay">
+        <h2 id="focus-title"></h2>
+        <p id="focus-subtitle"></p>
+        <div class="return-hint">[ CLICK ANYWHERE TO RETURN ]</div>
+    </div>
+
+    <script src="playgroundData.js"></script>
+    <script src="playground.js"></script>
+    <script>
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, .card')) {
+                cursor.style.transform += ' scale(4)';
+            }
+        });
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a, .card')) {
+                cursor.style.transform = cursor.style.transform.replace(' scale(4)', '');
+            }
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if (window.isFocused) {
+                if (!e.target.closest('.active-card')) {
+                    if (typeof resetView === 'function') resetView();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+/* Playground Unique Styles */
+
+:root {
+    --grid-gap: 2rem;
+}
+
+body {
+    overflow: hidden;
+    user-select: none;
+    cursor: none;
+    /* Persistent custom cursor */
+}
+
+.viewport {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+}
+
+.viewport:active {
+    cursor: grabbing;
+}
+
+/* Cursor UX for focused mode */
+.viewport.is-focused-mode {
+    cursor: zoom-out;
+}
+
+.viewport.is-focused-mode .card.active-card {
+    cursor: default;
+}
+
+/* Physics Wrapper */
+.grid-wrapper {
+    position: absolute;
+    will-change: transform;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Hardware Acceleration Hints for 120Hz Smoothness */
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+
+    /* Fixed origin for linear translation-based path */
+    transform-origin: 0 0;
+}
+
+/* Logic for focusing or resetting scale */
+.is-focused,
+.is-resetting {
+    transition: transform 1.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-gap);
+    transition: gap 2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(12, 1fr);
+    }
+}
+
+/* Final Expanded State */
+.grid-spaced {
+    --grid-gap: 6rem;
+}
+
+/* 500:600 Ratio Cards - Reverted to fixed sizes */
+.card {
+    width: 100px;
+    height: 120px;
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s cubic-bezier(0.7, 0, 0.2, 1);
+    z-index: 1;
+    overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+    .card {
+        width: 150px;
+        height: 180px;
+    }
+}
+
+.active-card {
+    z-index: 50;
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.card:hover .card-img {
+    opacity: 1;
+}
+
+/* Information Overlay - Lowered per request */
+.info-overlay {
+    position: fixed;
+    bottom: 6%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease 0s;
+    z-index: 100;
+}
+
+.info-visible {
+    opacity: 1;
+    transition: opacity 0.8s ease 0.8s;
+}
+
+.is-focused .card:not(.active-card) {
+    opacity: 0;
+    pointer-events: none;
+}
