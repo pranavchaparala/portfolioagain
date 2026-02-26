@@ -23,6 +23,10 @@ function injectNavigation() {
     // Determine active links based on current path
     const isIndex = window.location.pathname.endsWith('index.html') && !window.location.pathname.includes('/projects/');
     const isWork = window.location.pathname.endsWith('work.html');
+    const isPlay = window.location.pathname.endsWith('play.html');
+    const isResearch = window.location.pathname.endsWith('research.html');
+    const isAbout = window.location.pathname.endsWith('about.html');
+    const isContact = window.location.pathname.endsWith('contact.html');
     const isProject = window.location.pathname.includes('/projects/');
 
     if (isProject) return; // Hide/avoid injecting navbar in project pages
@@ -34,10 +38,10 @@ function injectNavigation() {
         <nav class="main-nav">
             <a href="${basePath}index.html" class="${brandClass}">Pranav Chaparala</a>
             <a href="${basePath}work.html" class="${isWork ? 'active-link' : ''}">Work</a>
-            <a href="${basePath}play.html">Play</a>
-            <a href="#">Research</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+            <a href="${basePath}play.html" class="${isPlay ? 'active-link' : ''}">Play</a>
+            <a href="${basePath}research.html" class="${isResearch ? 'active-link' : ''}">Research</a>
+            <a href="${basePath}about.html" class="${isAbout ? 'active-link' : ''}">About</a>
+            <a href="${basePath}contact.html" class="${isContact ? 'active-link' : ''}">Contact</a>
         </nav>
     `;
     document.body.insertAdjacentHTML('beforeend', navHTML);

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work | Pranav Chaparala</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #hover-image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        /* 1. THE BLURRED BACKGROUND IMAGE */
+        #hover-bg-blur {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(20px) brightness(0.9);
+            transform: scale(1.1);
+            opacity: 0;
+            /* Fixed: set initial opacity to 0 */
+            z-index: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        /* 2. THE FLOATING PREVIEW IMAGE */
+        #hover-preview {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            width: 400px;
+            height: 300px;
+            object-fit: cover;
+            transform: translate(-50%, -50%) scale(0.95);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        /* 3. ACTIVE STATES */
+        #hover-image-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #hover-image-container.active #hover-bg-blur {
+            opacity: 0.35;
+        }
+
+        #hover-image-container.active #hover-preview {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
+</head>
+
+<body class="loading">
+
+    <div id="hover-image-container">
+        <img src="" id="hover-bg-blur" alt="">
+        <img src="" id="hover-preview" alt="">
+    </div>
+
+    <nav id="work-list">
+        <span class="section-label">Work</span>
+        <ul>
+        </ul>
+    </nav>
+    <div class="page-content">
+    </div>
+
+    <script src="cursor.js"></script>
+    <script src="components.js"></script>
+</body>
+
+</html>
