@@ -68,7 +68,8 @@ body {
 /* --- 4. GALLERY (INDEX ONLY) --- */
 #gallery-wrap {
     position: fixed;
-    bottom: calc(50% + 20px + 8px);
+    top: 50%;
+    transform: translateY(-50%);
     left: 0;
     width: 100%;
     pointer-events: auto;
@@ -228,12 +229,39 @@ body.page-leaving #gallery-wrap {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* --- 8. RESPONSIVE DESIGN --- */
+/* --- 8. SQUARE LOADING BAR --- */
+.loading-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #fff;
+    border-bottom: 2px solid #000;
+    z-index: 11000;
+    pointer-events: none;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: #000;
+    transition: width 0.3s ease;
+}
+
+
+
+/* --- 10. RESPONSIVE DESIGN --- */
+
+/* Desktop: show nav-links, hide hamburger */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
 
 /* Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
-
-    /* Slightly smaller gallery items */
     .gallery-track a:nth-child(odd) img {
         height: 150px;
     }
@@ -246,7 +274,6 @@ body.page-leaving #gallery-wrap {
         gap: 20px;
     }
 
-    /* Project Pages: Adjust container max-width */
     .case-study-container {
         width: 70vw;
     }
@@ -254,19 +281,36 @@ body.page-leaving #gallery-wrap {
 
 /* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
+
+    /* Nav: list view at the bottom */
     .main-nav {
-        top: auto;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        gap: 16px;
-        flex-wrap: wrap;
-        width: 90vw;
+        top: auto !important;
+        bottom: 40px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 100%;
         justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        background: transparent;
     }
 
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .nav-links a {
+        font-size: 16px;
+    }
+
+    /* Gallery adjustments */
     #gallery-wrap {
-        bottom: calc(30px + 60px + 8px);
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: auto;
     }
 
     .gallery-track a:nth-child(odd) img {
@@ -277,11 +321,22 @@ body.page-leaving #gallery-wrap {
         height: 180px;
     }
 
-    /* Hide the work list on mobile project pages or index */
+    /* Work list visible on mobile */
     #work-list {
-        display: none !important;
+        display: block !important;
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-top: 100px;
+        margin-left: 24px;
+        z-index: 2000;
     }
 
+    #work-list li {
+        font-size: 16px;
+    }
+
+    /* Project pages */
     .case-study-container {
         width: 90vw;
         padding-top: 100px;
@@ -292,19 +347,19 @@ body.page-leaving #gallery-wrap {
         gap: 20px;
     }
 
-    /* Hide the scroll minimap/rail */
     .nav-rail {
         display: none !important;
     }
 
     .back-btn-center {
-        top: 20px;
-        left: 20px;
+        top: 24px;
+        left: 24px;
         transform: none;
+        font-size: 15px;
     }
 }
 
-/* Disable Hover and Custom Cursor on Mobile Devices */
+/* Disable Hover and Custom Cursor on Touch Devices */
 @media (hover: none) and (pointer: coarse) {
 
     #cursor-svg,
@@ -318,5 +373,18 @@ body.page-leaving #gallery-wrap {
 
     #hover-image-container {
         display: none !important;
+    }
+
+    /* Disable hover opacity effects */
+    .main-nav a:hover,
+    #work-list li:hover,
+    .back-btn-center:hover,
+    .gallery-track img:hover {
+        opacity: 1 !important;
+    }
+
+    /* Prevent body scroll lock from overlay */
+    body.overlay-open {
+        overflow: hidden;
     }
 }

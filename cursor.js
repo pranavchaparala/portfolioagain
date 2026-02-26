@@ -68,9 +68,13 @@ function initCursor() {
 
         requestAnimationFrame(updateCursor);
     }
-    
+
 
     updateCursor();
 }
 
-document.addEventListener('DOMContentLoaded', initCursor);
+document.addEventListener('DOMContentLoaded', () => {
+    // Skip cursor on touch-only devices
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+    initCursor();
+});

@@ -20,7 +20,6 @@ const getBasePath = () => {
 const basePath = getBasePath();
 
 function injectNavigation() {
-    // Determine active links based on current path
     const isIndex = window.location.pathname.endsWith('index.html') && !window.location.pathname.includes('/projects/');
     const isWork = window.location.pathname.endsWith('work.html');
     const isPlay = window.location.pathname.endsWith('play.html');
@@ -29,41 +28,52 @@ function injectNavigation() {
     const isContact = window.location.pathname.endsWith('contact.html');
     const isProject = window.location.pathname.includes('/projects/');
 
-    if (isProject) return; // Hide/avoid injecting navbar in project pages
+    if (isProject) return;
 
-    // Default brand to active link styling, otherwise regular style
     const brandClass = isIndex ? 'active-link' : 'brand';
 
     const navHTML = `
         <nav class="main-nav">
-            <a href="${basePath}index.html" class="${brandClass}">Pranav Chaparala</a>
-            <a href="${basePath}work.html" class="${isWork ? 'active-link' : ''}">Work</a>
-            <a href="${basePath}play.html" class="${isPlay ? 'active-link' : ''}">Play</a>
-            <a href="${basePath}research.html" class="${isResearch ? 'active-link' : ''}">Research</a>
-            <a href="${basePath}about.html" class="${isAbout ? 'active-link' : ''}">About</a>
-            <a href="${basePath}contact.html" class="${isContact ? 'active-link' : ''}">Contact</a>
+            <div class="nav-links">
+                <a href="${basePath}index.html" class="${brandClass}">Pranav Chaparala</a>
+                <a href="${basePath}work.html" class="${isWork ? 'active-link' : ''}">Work</a>
+                <a href="${basePath}play.html" class="${isPlay ? 'active-link' : ''}">Play</a>
+                <a href="${basePath}research.html" class="${isResearch ? 'active-link' : ''}">Research</a>
+                <a href="${basePath}about.html" class="${isAbout ? 'active-link' : ''}">About</a>
+                <a href="${basePath}contact.html" class="${isContact ? 'active-link' : ''}">Contact</a>
+            </div>
         </nav>
     `;
     document.body.insertAdjacentHTML('beforeend', navHTML);
 }
 
 function setupTransitions() {
-    // Add page transition overlay to body
+    // Add loading bar container
+    const loadingBarHTML = `
+        <div class="loading-bar-container">
+            <div class="loading-bar-fill" id="loading-bar-fill"></div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('afterbegin', loadingBarHTML);
+
     const overlay = document.createElement('div');
     overlay.className = 'page-transition-overlay';
     document.body.appendChild(overlay);
 
-    // Initial load transition
     window.addEventListener('load', () => {
         document.body.classList.add('page-loaded');
+        const fill = document.getElementById('loading-bar-fill');
+        if (fill) fill.style.width = '100%';
+        setTimeout(() => {
+            const container = document.querySelector('.loading-bar-container');
+            if (container) container.style.opacity = '0';
+        }, 500);
     });
 
-    // In case load already fired
     if (document.readyState === 'complete') {
         document.body.classList.add('page-loaded');
     }
 
-    // Handle link clicks
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         const href = link ? link.getAttribute('href') : null;
@@ -77,7 +87,7 @@ function setupTransitions() {
 
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 600); // Duration of out transition
+            }, 600);
         }
     });
 }
@@ -102,7 +112,6 @@ function initWorksTrack() {
     });
 
     const imgs = Array.from(track.children);
-    // Infinite loop clones
     imgs.forEach(img => track.appendChild(img.cloneNode(true)));
     imgs.forEach(img => track.appendChild(img.cloneNode(true)));
 
@@ -110,9 +119,24 @@ function initWorksTrack() {
     let velocity = 0;
     const centerX = window.innerWidth / 2;
 
+    // Mouse scroll
     window.addEventListener('wheel', (e) => {
         velocity += e.deltaY * 0.15;
     });
+
+    // Touch drag for gallery
+    let touchStartX = 0;
+    let lastTouchX = 0;
+    track.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        lastTouchX = touchStartX;
+        velocity = 0;
+    }, { passive: true });
+    track.addEventListener('touchmove', (e) => {
+        const dx = lastTouchX - e.touches[0].clientX;
+        velocity = dx * 0.5;
+        lastTouchX = e.touches[0].clientX;
+    }, { passive: true });
 
     function animate() {
         scrollX -= velocity;
@@ -152,6 +176,8 @@ function initWorksList() {
     const hoverImg = document.getElementById('hover-preview');
     const hoverBg = document.getElementById('hover-bg-blur');
 
+    const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
     worksData.forEach(work => {
         const li = document.createElement('li');
         li.setAttribute('data-img', work.img);
@@ -163,21 +189,23 @@ function initWorksList() {
         li.appendChild(a);
         listContainer.appendChild(li);
 
-        a.addEventListener('mouseenter', () => {
-            const imgName = li.getAttribute('data-img');
-            if (imgName && hoverImg && hoverBg && hoverContainer) {
-                const fullPath = basePath + 'covers/' + imgName;
-                hoverImg.src = fullPath;
-                hoverBg.src = fullPath;
-                hoverContainer.classList.add('active');
-            }
-        });
+        if (!isTouch) {
+            a.addEventListener('mouseenter', () => {
+                const imgName = li.getAttribute('data-img');
+                if (imgName && hoverImg && hoverBg && hoverContainer) {
+                    const fullPath = basePath + 'covers/' + imgName;
+                    hoverImg.src = fullPath;
+                    hoverBg.src = fullPath;
+                    hoverContainer.classList.add('active');
+                }
+            });
 
-        a.addEventListener('mouseleave', () => {
-            if (hoverContainer) {
-                hoverContainer.classList.remove('active');
-            }
-        });
+            a.addEventListener('mouseleave', () => {
+                if (hoverContainer) {
+                    hoverContainer.classList.remove('active');
+                }
+            });
+        }
     });
 }
 

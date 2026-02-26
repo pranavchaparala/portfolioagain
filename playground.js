@@ -66,6 +66,11 @@ function initGrid() {
         const description = data.description;
         const filename = data.filename;
 
+        // Store data on element for touch tap handler
+        card._title = title;
+        card._description = description;
+        card._videoFilename = data.videoFilename;
+
         // Correct path for root-level assets
         const assetPath = `playgroundassets/${filename}`;
 
@@ -159,6 +164,8 @@ function updatePhysics() {
 
 function setupDragListeners() {
     if (!viewport) return;
+
+    // --- Mouse ---
     viewport.onmousedown = (e) => {
         if (isFocused || isResetting || !isGridReady) return;
         isDragging = true;
@@ -174,6 +181,44 @@ function setupDragListeners() {
         lastMouseX = e.clientX; lastMouseY = e.clientY;
     };
     window.onmouseup = () => { isDragging = false; };
+
+    // --- Touch ---
+    viewport.addEventListener('touchstart', (e) => {
+        if (isFocused || isResetting || !isGridReady) return;
+        isDragging = true;
+        velocityX = 0; velocityY = 0;
+        lastMouseX = e.touches[0].clientX;
+        lastMouseY = e.touches[0].clientY;
+        clickStartX = e.touches[0].clientX;
+        clickStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', (e) => {
+        if (!isDragging || isFocused || isResetting || !isGridReady) return;
+        const dx = e.touches[0].clientX - lastMouseX;
+        const dy = e.touches[0].clientY - lastMouseY;
+        targetX += dx; targetY += dy;
+        velocityX = dx; velocityY = dy;
+        lastMouseX = e.touches[0].clientX;
+        lastMouseY = e.touches[0].clientY;
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', (e) => {
+        isDragging = false;
+        // Treat a short tap as a card click
+        const touch = e.changedTouches[0];
+        const dist = Math.hypot(touch.clientX - clickStartX, touch.clientY - clickStartY);
+        if (dist < dragThreshold && !isResetting && !isFocused && isClickable) {
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            const card = target && target.closest('.card');
+            if (card) {
+                const title = card._title;
+                const description = card._description;
+                const videoFilename = card._videoFilename;
+                if (title) handleCardClick(card, title, description, videoFilename);
+            }
+        }
+    });
 }
 
 function handleCardClick(clickedCard, title, description, videoFilename) {
