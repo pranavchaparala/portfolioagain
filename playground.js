@@ -6,16 +6,16 @@
 // --- Global State ---
 let grid, gridWrapper, infoOverlay, viewport;
 
-const totalCards = 104; 
+const totalCards = 104;
 let isDragging = false;
 let isFocused = false;
 let isResetting = false;
-let isGridReady = false; 
-let isClickable = false; 
+let isGridReady = false;
+let isClickable = false;
 
 let pendingZoomArgs = null;
-let targetX = 0, targetY = 0; 
-let currentX = 0, currentY = 0; 
+let targetX = 0, targetY = 0;
+let currentX = 0, currentY = 0;
 let lastMouseX = 0, lastMouseY = 0;
 let clickStartX = 0, clickStartY = 0;
 let velocityX = 0, velocityY = 0;
@@ -27,7 +27,7 @@ const dragThreshold = 5;
 function initGrid() {
     grid = document.getElementById('grid');
     gridWrapper = document.getElementById('grid-wrapper');
-    infoOverlay = document.getElementById('info-overlay'); 
+    infoOverlay = document.getElementById('info-overlay');
     viewport = document.getElementById('viewport');
 
     if (!grid || !gridWrapper || !viewport) return;
@@ -36,8 +36,8 @@ function initGrid() {
     isDragging = false;
     isFocused = false;
     isResetting = false;
-    isGridReady = false; 
-    isClickable = false; 
+    isGridReady = false;
+    isClickable = false;
     targetX = 0; targetY = 0;
     currentX = 0; currentY = 0;
     velocityX = 0; velocityY = 0;
@@ -54,18 +54,18 @@ function initGrid() {
         [dataPool[i], dataPool[j]] = [dataPool[j], dataPool[i]];
     }
 
-    grid.innerHTML = ''; 
+    grid.innerHTML = '';
 
     for (let i = 0; i < totalCards; i++) {
         const card = document.createElement('div');
         card.className = 'card';
-        card.style.pointerEvents = 'none'; 
+        card.style.pointerEvents = 'none';
 
         const data = dataPool[i];
         const title = data.title;
         const description = data.description;
         const filename = data.filename;
-        
+
         // Correct path for root-level assets
         const assetPath = `playgroundassets/${filename}`;
 
@@ -73,7 +73,7 @@ function initGrid() {
             const vid = document.createElement('video');
             vid.src = assetPath;
             vid.autoplay = true; vid.loop = true; vid.muted = true; vid.playsInline = true;
-            vid.className = 'card-img'; 
+            vid.className = 'card-img';
             card.appendChild(vid);
         } else {
             const img = document.createElement('img');
@@ -92,7 +92,7 @@ function initGrid() {
         };
 
         card.onmouseup = (e) => {
-            if (!isClickable) return; 
+            if (!isClickable) return;
             const dist = Math.hypot(e.clientX - clickStartX, e.clientY - clickStartY);
             if (dist < dragThreshold && !isResetting && !isFocused) {
                 handleCardClick(card, title, description, data.videoFilename);
@@ -107,10 +107,10 @@ function initGrid() {
     // Sequence for entry animation
     setTimeout(() => { if (grid) grid.classList.add('grid-spaced'); }, 1000);
     setTimeout(() => { isGridReady = true; }, 1800);
-    setTimeout(() => { 
-        isClickable = true; 
+    setTimeout(() => {
+        isClickable = true;
         document.querySelectorAll('.card').forEach(c => {
-            c.style.pointerEvents = 'auto'; 
+            c.style.pointerEvents = 'auto';
             c.style.cursor = 'pointer';
         });
     }, 2500);
@@ -160,7 +160,7 @@ function updatePhysics() {
 function setupDragListeners() {
     if (!viewport) return;
     viewport.onmousedown = (e) => {
-        if (isFocused || isResetting || !isGridReady) return; 
+        if (isFocused || isResetting || !isGridReady) return;
         isDragging = true;
         velocityX = 0; velocityY = 0;
         lastMouseX = e.clientX; lastMouseY = e.clientY;
@@ -186,7 +186,7 @@ function handleCardClick(clickedCard, title, description, videoFilename) {
 
 function executeZoom({ clickedCard, title, description, videoFilename }) {
     isFocused = true;
-    
+
     document.body.classList.add('project-focused');
     viewport.classList.add('is-focused-mode');
     gridWrapper.classList.add('is-focused');
@@ -206,7 +206,7 @@ function executeZoom({ clickedCard, title, description, videoFilename }) {
     gridWrapper.style.transform = `translate3d(${zoomTargetX}px, ${zoomTargetY}px, 0px) scale(${scale})`;
 
     if (infoOverlay) {
-        infoOverlay.classList.add('active'); 
+        infoOverlay.classList.add('active');
         document.getElementById('focus-title').innerText = title;
         document.getElementById('focus-subtitle').innerText = description;
     }
@@ -214,7 +214,7 @@ function executeZoom({ clickedCard, title, description, videoFilename }) {
     if (videoFilename) {
         const vid = document.createElement('video');
         // FIXED: Removed ../ for proper GitHub Pages pathing
-        vid.src = `playgroundassets/${videoFilename}`; 
+        vid.src = `playgroundassets/${videoFilename}`;
         vid.autoplay = true; vid.muted = false; vid.loop = true; vid.playsInline = true;
         vid.className = 'card-video';
         vid.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s ease 0.5s;pointer-events:none;";
@@ -265,6 +265,6 @@ window.addEventListener('mousedown', (e) => {
     }
 });
 
-window.addEventListener('load', () => { 
-    if (document.getElementById('grid')) initGrid(); 
+window.addEventListener('load', () => {
+    if (document.getElementById('grid')) initGrid();
 });
